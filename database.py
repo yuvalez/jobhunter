@@ -93,6 +93,24 @@ async def pending_group_response(group_id, approve: bool):
     print(f"deleted pending group - {doc['_id']}")
     return deleted.deleted_count == 1
 
+async def delete_group(group_id):
+    deleted = await col.delete_one({"_id": bson.ObjectId(group_id)})
+    print(f"deleted group - {group_id}")
+    return deleted.deleted_count == 1
+
+async def update_group(group_id, name, link, area, category):
+    update = {
+        "$set": {
+            "category": category,
+            "area": area,
+            "group_name": name,
+            "group_link": link,
+        }
+    }
+    updated = await col.find_one_and_update({"_id": bson.ObjectId(group_id)}, update, upsert=False);
+    print(f"updated group - {group_id}")
+    return bool(updated)
+
 async def add_pending_group(group_name, group_link, area, category, description):
     pending_groups_col = db.pending_groups
     return await add_group(group_name, area, category, group_link, description, collection=pending_groups_col)

@@ -42,3 +42,19 @@ class ResponsePendingGroupResponse(BaseModel):
 class PendingGroupResponseRequest(AdminAcessRequest):
     group_id: str
     approve: bool
+
+class DeleteGroupRequest(AdminAcessRequest):
+    group_id: str
+
+class DeleteGroupResponse(BaseModel):
+    success: bool
+
+class UpdateGroupRequest(AdminAcessRequest):
+    group_id: str
+    group_name: str
+    group_link: str
+    area: str
+    category: str
+
+class UpdateGroupResponse(BaseModel):
+    success: bool

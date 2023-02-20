@@ -14,7 +14,7 @@ from api_requests import *
 
 app = FastAPI()
 
-origins = ['https://localhost:3000', 'http://localhost:3000']
+origins = ['*']
 
 app.add_middleware(
     CORSMiddleware,
@@ -59,6 +59,18 @@ async def get_pending_groups(msg: FetchPendingGroupRequest):
 async def response_pending_group(msg: PendingGroupResponseRequest):
     response = await database.pending_group_response(msg.group_id, msg.approve)
     return ResponsePendingGroupResponse(success=response)
+
+@app.post("/api/delete_group")
+@admin_access
+async def delete_group(msg: DeleteGroupRequest):
+    response = await database.delete_group(msg.group_id)
+    return DeleteGroupResponse(success=response)
+
+@app.post("/api/update_group")
+@admin_access
+async def update_group(msg: UpdateGroupRequest):
+    response = await database.update_group(msg.group_id, msg.group_name, msg.group_link, msg.area, msg.category)
+    return UpdateGroupResponse(success=response)
 
 @app.post("/api/pending_groups/add")
 async def add_pending_group(msg: AddPendingGroupRequest):
